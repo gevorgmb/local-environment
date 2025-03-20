@@ -11,3 +11,6 @@ If you want to use HTTPS, check [instruction](docker/README.md)
 
 ## Run Environment
 * Run command docker-compose up --build -d
+
+## Contribute, use
+The project is available for personal use and reasonable suggestions for improvement. 
