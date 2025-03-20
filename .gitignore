@@ -1,0 +1,38 @@
+web/
+!web/app/.gitkeep
+!web/ui/.gitkeep
+
+# Global
+.*.swp
+.DS_Store
+.env
+
+# Application
+docker/data/
+docker/docker-compose.override.yml
+docker/.env
+docker/etc/app/default.conf
+docker/etc/app/default.template.conf
+docker/private
+!docker/private/.gitkeep
+
+# PHPStorm
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+.idea/
+
+# Netbeans
+nbproject/
+/nbproject/
+/nbproject/private/
+/nbproject/private/private.properties
+
+# VSCode
+.vscode/
+
+# SSL Certs
+docker/etc/ssl/
+!docker/etc/ssl/.gitkeep
+docker/etc/ssl_sources/certificate_info.cnf
+docker/etc/ssl_sources/params.sh
