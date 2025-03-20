@@ -1,4 +1,4 @@
-web/
+web/*
 !web/app/.gitkeep
 !web/ui/.gitkeep
 
@@ -13,8 +13,6 @@ docker/docker-compose.override.yml
 docker/.env
 docker/etc/app/default.conf
 docker/etc/app/default.template.conf
-docker/private
-!docker/private/.gitkeep
 
 # PHPStorm
 .idea
