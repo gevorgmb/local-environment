@@ -42,8 +42,8 @@ services:
       dockerfile: Dockerfile
     restart: no
     volumes:
-      - "../web/ui:/var/www/html"
-    working_dir: "/var/www/html"
+      - "../web/ui:/var/www/html/ui"
+    working_dir: "/var/www/html/ui/"
 
   composer:
     build:
