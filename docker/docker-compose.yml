@@ -1,12 +1,12 @@
-networks:
-  dev: #choose name you want instead of network1
+#networks:
+#  dev: #choose name you want instead of network1
 
 name: your_project_name
 
 services:
   app:
     image: nginx:stable-alpine
-    container_name: ${PROJECT_NAME}-app
+    container_name: app
     volumes:
       - "./etc/app/default.conf:/etc/nginx/conf.d/default.conf"
       - "./etc/app/default.template.conf:/etc/nginx/conf.d/default.template"
@@ -16,8 +16,8 @@ services:
       - "./log/ui/:/var/log/ui/"
       - "../web/ui/:/var/www/html/ui/"
     ports:
-      - "8088:80"
-      - "3000:443"
+      - "${PORT_HTTP}:80"
+      - "${PORT_HTTPS}:443"
     environment:
       - NGINX_HOST=${NGINX_HOST}
     command: /bin/sh -c "envsubst '$$NGINX_HOST' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
@@ -30,13 +30,13 @@ services:
     build:
       context: dockerfiles/php
       dockerfile: Dockerfile
-    container_name: ${PROJECT_NAME}-php-fpm
+    container_name: php-fpm
     volumes:
       - "../web/app:/var/www/html/app"
 
   node:
     command: tail -f /etc/hosts
-    container_name: ${PROJECT_NAME}-node
+    container_name: node
     build:
       context: dockerfiles/node
       dockerfile: Dockerfile
@@ -49,13 +49,13 @@ services:
     build:
       context: dockerfiles/composer
       dockerfile: Dockerfile
-    container_name: ${PROJECT_NAME}-composer
+    container_name: composer
     volumes:
       - "../web/app:/var/www/html/app"
 
   myadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: ${PROJECT_NAME}-phpmyadmin
+    container_name: phpmyadmin
     ports:
       - "8080:80"
     environment:
@@ -66,8 +66,8 @@ services:
       - mysqldb
 
   mysqldb:
-    image: mysql:${MYSQL_VERSION}
-    container_name: ${PROJECT_NAME}-${MYSQL_HOST}
+    image: mysql:latest
+    container_name: mysql
     restart: on-failure
     env_file:
       - ".env"
@@ -77,6 +77,6 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
-      - "8989:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
