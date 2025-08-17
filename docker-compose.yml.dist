@@ -1,20 +1,20 @@
 #networks:
 #  dev: #choose name you want instead of network1
 
-name: your_project_name
+name: ${PROJECT_NAME}
 
 services:
   app:
     image: nginx:stable-alpine
-    container_name: app
+    container_name: ${PROJECT_NAME}-app
     volumes:
       - "./etc/app/default.conf:/etc/nginx/conf.d/default.conf"
       - "./etc/app/default.template.conf:/etc/nginx/conf.d/default.template"
       - "./etc/ssl:/etc/ssl"
       - "./log/app/:/var/log/app/"
-      - "../web/app/:/var/www/html/app/"
+      - "${CODE_BASE_DIR}/app/:/var/www/html/app/"
       - "./log/ui/:/var/log/ui/"
-      - "../web/ui/:/var/www/html/ui/"
+      - "${CODE_BASE_DIR}/ui/:/var/www/html/ui/"
     ports:
       - "${PORT_HTTP}:80"
       - "${PORT_HTTPS}:443"
@@ -25,49 +25,60 @@ services:
     depends_on:
       - php-fpm
       - mysqldb
+    networks:
+      - ln
 
   php-fpm:
     build:
       context: dockerfiles/php
       dockerfile: Dockerfile
-    container_name: php-fpm
+    container_name: ${PROJECT_NAME}-php-fpm
     volumes:
-      - "../web/app:/var/www/html/app"
+      - "${CODE_BASE_DIR}/app:/var/www/html/app"
+    networks:
+      - ln
 
   node:
     command: tail -f /etc/hosts
-    container_name: node
+    container_name: ${PROJECT_NAME}-node
     build:
       context: dockerfiles/node
       dockerfile: Dockerfile
     restart: no
     volumes:
-      - "../web/ui:/var/www/html/ui"
-    working_dir: "/var/www/html/ui/"
+      - "${CODE_BASE_DIR}/ui:/var/www/html"
+    working_dir: "/var/www/html/"
+    networks:
+      - ln
 
   composer:
     build:
       context: dockerfiles/composer
       dockerfile: Dockerfile
-    container_name: composer
+    container_name: ${PROJECT_NAME}-composer
     volumes:
-      - "../web/app:/var/www/html/app"
+      - "${CODE_BASE_DIR}/app:/var/www/html/app"
+    networks:
+      - ln
 
-  myadmin:
+  phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: ${PROJECT_NAME}-phpmyadmin
     ports:
-      - "8080:80"
+      - "${MY_ADMIN_PORT:-8282}:80"
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=${MYSQL_HOST}
     restart: on-failure
     depends_on:
       - mysqldb
+    networks:
+      - ln
 
   mysqldb:
     image: mysql:latest
-    container_name: mysql
+    container_name: ${PROJECT_NAME}-mysql
+    user: "${MYSQL_VOLUME_OWNER:-1000:1000}"
     restart: on-failure
     env_file:
       - ".env"
@@ -77,6 +88,21 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "${MYSQL_PORT:-3316}:3306"
     volumes:
       - "./data/db/mysql:/var/lib/mysql"
+    networks:
+      - ln
+
+  mailcatcher:
+    image: dockage/mailcatcher:latest
+    container_name: ${PROJECT_NAME}-mailcatcher
+    ports:
+      - "${MAIL_CATCHER_PORT_1}:1080"
+      - "${MAIL_CATCHER_PORT_2}:1025"
+    restart: on-failure
+    networks:
+      - ln
+
+networks:
+  ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service

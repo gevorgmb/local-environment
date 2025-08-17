@@ -21,7 +21,7 @@ It will create certificate files in [project_root]/docker/etc/ssl folder
 * Apache: Update SSLCertificateFile and SSLCertificateKeyFile in the VirtualHost config.
 * NGINX: Use ssl_certificate [prefix]_cert.pem; and ssl_certificate_key [prefix]_key.pem; in the server block.
 
-## 5. Add generated SSL Certificate to the "Trusted List" 
+## 5. Add generated SSL Certificate to the "Trusted List"
 
 ### OS: Windows
 #### 1. Open Certificate Manager

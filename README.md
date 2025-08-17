@@ -2,7 +2,7 @@
 Provides local environment with docker compose for local development
 
 ## SSL Certificate
-If you want to use HTTPS, check [instruction](docker/README.md) 
+If you want to use HTTPS, check [instruction](README_SSL.md) 
 
 ## Adding files based on *.dist files
 * Create .env file in directory docker, based on .env.dist
