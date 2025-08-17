@@ -1,0 +1,128 @@
+# Nginx configuration
+
+# PHP server
+#
+# server {
+#     listen 80 default_server;
+#     listen [::]:80 default_server;
+#     server_name api.${NGINX_HOST} www.api.${NGINX_HOST};
+#
+#     index index.php index.html;
+#     error_log  /var/log/app/error.log;
+#     access_log /var/log/app/access.log;
+#     root /var/www/html/app/public;
+#
+#     set $virtualdir "";
+#     set $realdir "";
+#
+#     if ($request_uri ~ ^/([^/]*)/.*$ ) {
+#         set $virtualdir /$1;
+#     }
+#
+#     if (-d "$document_root$virtualdir") {
+#         set $realdir "${virtualdir}";
+#     }
+#
+#     location / {
+#         try_files $uri $uri/ $realdir/index.php?$args;
+#     }
+#     location ~ \.php$ {
+#         try_files $uri =404;
+#         fastcgi_split_path_info ^(.+\.php)(/.+)$;
+#         fastcgi_pass php-fpm:9000;
+#         fastcgi_index index.php;
+#         include fastcgi_params;
+#         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+#         fastcgi_param PATH_INFO $fastcgi_path_info;
+#     }
+# }
+#
+# # UI Server
+#
+# server {
+#         listen 80;
+#         listen [::]:80;
+#
+#         root /var/www/html/ui/dist;
+#         error_log  /var/log/ui/error.log;
+#         access_log /var/log/ui/access.log;
+#         index index.html;
+#
+#         server_name ${NGINX_HOST} www.${NGINX_HOST};
+#
+#         location / {
+#           try_files $uri $uri/ /index.html;
+#         }
+# }
+
+# Redirect HTTP to HTTPS
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name ${NGINX_HOST} www.${NGINX_HOST} api.${NGINX_HOST} www.api.${NGINX_HOST};
+
+    return 301 https://$host$request_uri;
+}
+
+# UI server
+
+server {
+    listen 443 ssl;
+
+    root /var/www/html/ui/dist;
+    index index.html;
+
+    server_name ${NGINX_HOST} www.${NGINX_HOST};
+
+    location / {
+            try_files $uri $uri/ /index.html;
+    }
+
+    ssl_certificate /etc/ssl/[Your prefix]_cert.pem; # Replace [Your prefix] with correct string
+    ssl_certificate_key /etc/ssl/[Your prefix]_key.pem; # Replace [Your prefix] with correct string
+}
+
+# PHP server
+
+server {
+    server_name api.${NGINX_HOST} www.api.${NGINX_HOST};
+
+    listen 443 ssl;
+    fastcgi_param HTTPS on;
+
+    ssl_certificate /etc/ssl/[Your prefix]_cert.pem; # Replace [Your prefix] with correct string
+    ssl_certificate_key /etc/ssl/[Your prefix]_key.pem; # Replace [Your prefix] with correct string
+    ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+
+    index index.php;
+    error_log  /var/log/app/error.log;
+    access_log /var/log/app/access.log;
+    root /var/www/html/app/public;
+
+    set $virtualdir "";
+    set $realdir "";
+
+    if ($request_uri ~ ^/([^/]*)/.*$ ) {
+        set $virtualdir /$1;
+    }
+
+    if (-d "$document_root$virtualdir") {
+        set $realdir "${virtualdir}";
+    }
+
+    location / {
+        try_files $uri $uri/ $realdir/index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php-fpm:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}

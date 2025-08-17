@@ -26,3 +26,8 @@ etc/ssl/
 !etc/ssl/.gitkeep
 etc/ssl_sources/certificate_info.cnf
 etc/ssl_sources/params.sh
+
+# Logs
+log/
+!log/app/.gitkeep
+!log/ui/.gitkeep
