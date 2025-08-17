@@ -1,18 +1,13 @@
-web/*
-!web/app/.gitkeep
-!web/ui/.gitkeep
-
 # Global
 .*.swp
 .DS_Store
 .env
 
 # Application
-docker/data/
-docker/docker-compose.override.yml
-docker/.env
-docker/etc/app/default.conf
-docker/etc/app/default.template.conf
+data/
+docker-compose.yml
+etc/app/default.conf
+etc/app/default.template.conf
 
 # PHPStorm
 .idea
@@ -27,7 +22,12 @@ nbproject/
 .vscode/
 
 # SSL Certs
-docker/etc/ssl/
-!docker/etc/ssl/.gitkeep
-docker/etc/ssl_sources/certificate_info.cnf
-docker/etc/ssl_sources/params.sh
+etc/ssl/
+!etc/ssl/.gitkeep
+etc/ssl_sources/certificate_info.cnf
+etc/ssl_sources/params.sh
+
+# Logs
+log/
+!log/app/.gitkeep
+!log/ui/.gitkeep
