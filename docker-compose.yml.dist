@@ -104,5 +104,26 @@ services:
     networks:
       - ln
 
+  go-admin-api:
+    build:
+      context: ../
+      dockerfile: ${DOCKER_COMPOSE_DIR}/dockerfiles/go/Dockerfile # Path to Go Dockerfile from context
+      args:
+        - CODE_BASE=${CODE_BASE_DIR}
+        - PORT=${GO_PORT}
+    container_name: ${PROJECT_NAME}-go-admin-api
+    user: "${MYSQL_VOLUME_OWNER:-1000:1000}"
+    # No direct port mapping here as Nginx will proxy.
+    # We expose the port internally for Nginx to connect.
+    expose:
+      - "${GO_PORT}"
+    environment:
+      - PORT=${GO_PORT}
+      - GO_MESSAGE=${GO_MESSAGE}
+      - CODE_BASE_DIR=${CODE_BASE_DIR}
+    networks:
+      - ln
+    restart: on-failure
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
