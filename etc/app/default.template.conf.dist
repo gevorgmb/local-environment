@@ -80,6 +80,9 @@ server {
             try_files $uri $uri/ /index.html;
     }
 
+    error_log  /var/log/ui/error.log;
+    access_log /var/log/ui/access.log;
+
     ssl_certificate /etc/ssl/[Your prefix]_cert.pem; # Replace [Your prefix] with correct string
     ssl_certificate_key /etc/ssl/[Your prefix]_key.pem; # Replace [Your prefix] with correct string
 }
