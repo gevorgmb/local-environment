@@ -1,5 +1,11 @@
 FROM php:8.4-fpm-alpine
 
+# Container Variables used during build process before running instruction CMD
+ARG PORT
+
+# Container Environment variable used with CMD instruction
+ENV PORT=$PORT
+
 # Install runtime packages
 RUN apk add --no-cache \
     bzip2 \
@@ -92,6 +98,6 @@ RUN chown -R 1000:1000 /var/www/html/
 WORKDIR /var/www/html
 
 # Expose the port PHP server will run on
-EXPOSE 9000
+EXPOSE $PORT
 
-CMD ["php", "-S", "0.0.0.0:9000", "-t", "/var/www/html/public"]
+CMD php -S "0.0.0.0:${PORT}" -t /var/www/html/public
