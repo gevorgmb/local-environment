@@ -37,8 +37,10 @@ services:
       args:
         - PORT=${PHP_PORT_0}
     container_name: ${PROJECT_NAME}-php-fpm
+    environment:
+      - PHP_PORT_0=${PHP_PORT_0}
     volumes:
-      - "${CODE_BASE_DIR}/app:/var/www/html/app"
+      - "../${PHP_CONTAINER_0_CODE}:/var/www/html"
     networks:
       - ln
 
@@ -50,7 +52,7 @@ services:
       dockerfile: Dockerfile
     restart: no
     volumes:
-      - "${CODE_BASE_DIR}/ui:/var/www/html"
+      - "../${NODE_CONTAINER_0_CODE}:/var/www/html"
     working_dir: "/var/www/html/"
     networks:
       - ln
@@ -61,7 +63,7 @@ services:
       dockerfile: Dockerfile
     container_name: ${PROJECT_NAME}-composer
     volumes:
-      - "${CODE_BASE_DIR}/app:/var/www/html/app"
+      - "../${CODE_BASE_DIR}/app:/var/www/html/app"
     networks:
       - ln
 
