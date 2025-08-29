@@ -13,8 +13,8 @@ services:
       - "./etc/ssl:/etc/ssl"
       - "./log/app/:/var/log/app/"
       - "./log/ui/:/var/log/ui/"
-      - "../${NODE_CONTAINER_0_CODE}/:/var/www/html/"
-      - "./log/go/admin_api/:/var/log/go/admin_api/"
+      - "../${NODE_CONTAINER_0_CODE}/:/var/www/html/ui"
+      - "./log/go/:/var/log/go/"
     ports:
       - "${PORT_HTTP}:80"
       - "${PORT_HTTPS}:443"
@@ -26,7 +26,7 @@ services:
     depends_on:
       - php-fpm
       - mysqldb
-      - go-admin-api
+      - go
     networks:
       - ln
 
@@ -110,14 +110,14 @@ services:
     networks:
       - ln
 
-  go-admin-api:
+  go:
     build:
       context: ../
       dockerfile: ${DOCKER_COMPOSE_DIR}/dockerfiles/go/Dockerfile # Path to Go Dockerfile from context
       args:
         - CODE_BASE=${CODE_BASE_DIR}
         - PORT=${GO_PORT}
-    container_name: ${PROJECT_NAME}-go-admin-api
+    container_name: ${PROJECT_NAME}-go
     user: "${MYSQL_VOLUME_OWNER:-1000:1000}"
     # No direct port mapping here as Nginx will proxy.
     # We expose the port internally for Nginx to connect.
