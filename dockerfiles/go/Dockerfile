@@ -2,7 +2,7 @@
 FROM golang:1.25.0-alpine AS builder
 
 # Arguments that we are importing from outside to the dockerfile
-ARG CODE_BASE
+ARG GO_FOLDER
 ARG PORT
 
 WORKDIR /app
@@ -11,12 +11,12 @@ RUN apk --no-cache add bash git make gcc gettext
 
 # Copy go.mod and go.sum first to leverage Docker's caching
 # Paths are relative to the Docker Compose context (project root)
-COPY "$CODE_BASE/go/admin_api/go.mod" "${CODE_BASE}/go/admin_api/go.sum" ./
+COPY "$GO_FOLDER/go.mod" "$GO_FOLDER/go.sum" ./
 
 RUN go mod download
 
 # Copy the rest of the application source code
-COPY "$CODE_BASE/go/admin_api" .
+COPY "$GO_FOLDER" .
 
 # Build the Go application with optimizations
 # CGO_ENABLED=0 is important for statically linking the binary.
