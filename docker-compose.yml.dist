@@ -115,7 +115,7 @@ services:
       context: ../
       dockerfile: ${DOCKER_COMPOSE_DIR}/dockerfiles/go/Dockerfile # Path to Go Dockerfile from context
       args:
-        - CODE_BASE=${CODE_BASE_DIR}
+        - GO_FOLDER=${GO_FOLDER}
         - PORT=${GO_PORT}
     container_name: ${PROJECT_NAME}-go
     user: "${MYSQL_VOLUME_OWNER:-1000:1000}"
@@ -126,7 +126,7 @@ services:
     environment:
       - PORT=${GO_PORT}
       - GO_MESSAGE=${GO_MESSAGE}
-      - CODE_BASE_DIR=${CODE_BASE_DIR}
+      - GO_FOLDER=${GO_FOLDER}
     networks:
       - ln
     restart: on-failure
