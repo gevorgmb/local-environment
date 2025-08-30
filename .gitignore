@@ -31,3 +31,4 @@ etc/ssl_sources/params.sh
 log/
 !log/app/.gitkeep
 !log/ui/.gitkeep
+!log/go/.gitkeep
