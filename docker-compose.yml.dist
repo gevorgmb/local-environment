@@ -131,5 +131,21 @@ services:
       - ln
     restart: on-failure
 
+  redis:
+    image: redis:alpine
+    container_name: ${PROJECT_NAME}-redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    restart: on-failure
+    volumes:
+      - ./data/redis:/var/lib/redis:rw
+      - ./log/redis:/var/log/redis:rw
+      - ./etc/redis/redis.conf:/usr/local/etc/redis/redis.conf:rw
+    networks:
+      - ln
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
