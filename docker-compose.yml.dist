@@ -162,5 +162,22 @@ services:
     networks:
       - ln
 
+  node-server:
+    container_name: ${PROJECT_NAME}-node-server
+    build:
+      context: ../
+      dockerfile: ${DOCKER_COMPOSE_DIR}/dockerfiles/node-server/Dockerfile
+      args:
+        - CODE_PATH=${NODE_SERVER_CONTAINER_0_CODE}
+    restart: no
+    volumes:
+      - "../${NODE_SERVER_CONTAINER_0_CODE}:/usr/src/app"
+      - /usr/src/app/node_modules
+      - ./log/node:/var/log/app
+    ports:
+      - "${NODE_SERVER_PORT}:${NODE_SERVER_INTERNAL_PORT:-3000}"
+    networks:
+      - ln
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
