@@ -21,7 +21,7 @@ COPY "$GO_FOLDER" .
 # Build the Go application with optimizations
 # CGO_ENABLED=0 is important for statically linking the binary.
 # -ldflags="-s -w" strips debugging information and symbol tables.
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o myapp ./main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o myapp ./cmd/server
 
 # Stage 2: Create the minimal runtime image
 FROM alpine:latest

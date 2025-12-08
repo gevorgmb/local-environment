@@ -33,6 +33,7 @@ log/
 !log/ui/.gitkeep
 !log/go/.gitkeep
 !log/redis/.gitkeep
+!log/node/.gitkeep
 
 # Redis
 etc/redis/redis.conf
