@@ -1,4 +1,4 @@
-FROM node:23-alpine
+FROM node:24.13-alpine
 
 ARG CODE_PATH
 
