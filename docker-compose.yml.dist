@@ -193,5 +193,21 @@ services:
     networks:
       - ln
 
+  go-migrate:
+    image: migrate/migrate
+    container_name: ${PROJECT_NAME}-go-migrate
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    volumes:
+      - "../${GO_AUTH_FOLDER}/migrations:/migrations"
+    entrypoint: >
+      sh -c "
+      migrate -path /migrations/admin -database \"mysql://${MYSQL_ROOT_USER}:${MYSQL_ROOT_PASSWORD}@tcp(mysqldb:3306)/${MYSQL_DATABASE}?multiStatements=true\" force ${MIGRATION_ID} up &&
+      migrate -path /migrations -database \"mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysqldb:3306)/${UOUR_DB}?multiStatements=true\" up
+      "
+    networks:
+      - ln
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
