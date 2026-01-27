@@ -209,5 +209,21 @@ services:
     networks:
       - ln
 
+  db-migrate:
+    image: liquibase/liquibase:4.27
+    container_name: ${PROJECT_NAME}-liquibase
+    profiles: [tools]
+    environment:
+      # postgres - PostgreSQL container service 5432 - default port for internal use
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: changelog/master-mysql.yaml
+      LIQUIBASE_COMMAND_USERNAME: ${POSTGRES_USER}
+      LIQUIBASE_COMMAND_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - "${LIQUIBASE_CODE_DIR}db1:/liquibase/changelog"
+    entrypoint: ["liquibase"]
+    networks:
+      - ln
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
