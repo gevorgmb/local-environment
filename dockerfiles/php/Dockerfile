@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     bash \
     libpng \
     libjpeg-turbo \
+    postgresql-libs \
     freetype \
     icu \
     libzip \
@@ -34,6 +35,7 @@ RUN apk add --no-cache --virtual .build-deps \
     libevent-dev \
     libjpeg-turbo-dev \
     libmemcached-dev \
+    postgresql-dev \
     libpng-dev \
     libtool \
     libxml2-dev \
@@ -57,6 +59,7 @@ RUN docker-php-ext-install \
     mbstring \
     pdo \
     pdo_mysql \
+    pdo_pgsql \
     mysqli \
     zip \
     xml \
