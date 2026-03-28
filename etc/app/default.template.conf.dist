@@ -143,3 +143,40 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+# Use this if you are planning to use gRPC instead of REST
+# server {
+#     server_name api-admin.${NGINX_HOST} www.api-admin.${NGINX_HOST};
+#
+#     listen 443 ssl;
+#     http2 on;
+#
+#     ssl_certificate /etc/ssl/localenv_cert.pem;
+#     ssl_certificate_key /etc/ssl/localenv_key.pem;
+#
+#     error_log  /var/log/go/admin-error.log;
+#     access_log /var/log/go/admin-access.log;
+#
+#     # Important for large HTTP/2 frames
+#     http2_max_field_size 16k;
+#     http2_max_header_size 32k;
+#
+#     # Docker's internal DNS server address
+#     resolver 127.0.0.11 valid=10s;
+#
+#     # Store the service name in a variable
+#     set $go_service "go-service";
+#
+#     location / {
+#         # Increase the allowed size for gRPC responses
+#         grpc_buffer_size 128k; # Default is usually 4k or 8k
+#
+#         # Increase the body size limit (adjust based on your max message size)
+#         client_max_body_size 100m;
+#
+#         grpc_pass grpc://$go_service:${GO_PORT};
+#         grpc_read_timeout 1h;
+#         grpc_send_timeout 1h;
+#
+#         grpc_set_header Host $host;
+#     }
+# }
