@@ -8,6 +8,8 @@ data/
 docker-compose.yml
 etc/app/default.conf
 etc/app/default.template.conf
+etc/php/
+!etc/php/php-override.ini.dist
 
 # PHPStorm
 .idea
