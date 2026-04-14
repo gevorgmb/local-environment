@@ -44,6 +44,20 @@ services:
     networks:
       - ln
 
+  php-cli:
+    build:
+      context: dockerfiles/php-cli
+      dockerfile: Dockerfile
+    container_name: ${PROJECT_NAME}-php-cli
+    working_dir: /var/www/html
+    tty: true
+    stdin_open: true
+    volumes:
+      - "../${PHP_CONTAINER_0_CODE}:/var/www/html"
+      - "./etc/php/{your-custom-ini-file}:/usr/local/etc/php/conf.d/99-overrides.ini"
+    networks:
+      - ln
+
   node:
     command: tail -f /etc/hosts
     container_name: ${PROJECT_NAME}-node

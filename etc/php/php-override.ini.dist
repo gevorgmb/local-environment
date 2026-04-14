@@ -1,0 +1,17 @@
+; Increase memory for heavy Composer/Symfony tasks
+memory_limit = 512M
+upload_max_filesize = 100M
+post_max_size = 100M
+
+; Error reporting for development
+error_reporting = E_ALL
+display_errors = On
+display_startup_errors = On
+
+; Xdebug configuration (since you have it installed)
+xdebug.mode = debug
+xdebug.client_host = host.docker.internal
+xdebug.start_with_request = yes
+
+; Performance
+opcache.enable_cli = 1
