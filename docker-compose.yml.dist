@@ -239,5 +239,25 @@ services:
     networks:
       - ln
 
+  rabbit:
+    image: rabbitmq:3.13-management
+    container_name: ${PROJECT_NAME}-rabbit
+    restart: on-failure
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ln
+
 networks:
   ln: #local network "ln" could be changed with whatever you want, don't forget also chang it for each service
